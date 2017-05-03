@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Beverage Maker Api Gateway</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+
+    <style>
+    .table {
+        border-radius: 5px;
+        width: 60%;
+        margin: 0px auto;
+        float: none;
+    }
+    hr {
+     height: 4px;
+     color: black;
+     background-color: black;   
+    }
+    </style>
+
+    <div class="container">
+        <h2 class="text-center">Death Star Canteen</h2>
+        <p></p>
+        <h3 class="text-center">Beverage Maker Api Gateway - Configuration</h3>
+        
+        <hr/>
+        <div>
+            <h4 class="text-center"><b>Active Tea Routing</b></h4>
+            <div class="row text-center">
+                <button id="activeTeaConfigFrom" type="button" class="btn btn-lg btn-info" disabled="disabled" ></button>
+                <span class="text-center"> 
+                    <img src="./img/route-3d.jpg" width="75px">
+                </span>
+                <button id="activeTeaConfigTo" type="button" class="btn btn-lg btn-default" disabled="disabled" ></button>
+                <button id="activeTeaConfigToUrl" type="button" class="btn btn-lg btn-success" disabled="disabled" ></button>
+            </div>
+            <br/>
+
+            <div class="row text-center"><b>Available Tea Routes</b></div>
+            <div class="row">
+                <table class="table table-bordered table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Service</th>
+                            <th class="text-center">URL</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teaRoutes">
+                    </tbody>
+                </table>
+            </div>    
+        </div>
+
+        <br/>
+        <hr>
+        <div>
+            <h4 class="text-center"><b>Active Coffee Routing</b></h4>
+            <div class="row text-center">
+                <button id="activeCoffeeConfigFrom" type="button" class="btn btn-lg btn-warning" disabled="disabled" ></button>
+                <span class="text-center"> 
+                    <img src="./img/route-3d.jpg" width="75px">
+                </span>
+                <button id="activeCoffeeConfigTo" type="button" class="btn btn-lg btn-default" disabled="disabled" ></button>
+                <button id="activeCoffeeConfigToUrl" type="button" class="btn btn-lg btn-success" disabled="disabled" ></button>
+            </div>
+            <br/>
+
+            <div class="row text-center"><b>Available Coffee Routes</b></div>
+            <div class="row">
+                <table class="table table-bordered table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Service</th>
+                            <th class="text-center">URL</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coffeeRoutes">
+                    </tbody>
+                </table>    
+            </div>
+        </div>
+        <br/>
+        <hr>
+
+    </div>
+<script>
+
+$(document).ready(function(){
+   loadRouteConfigs();
+});
+
+function loadRouteConfigs() {
+
+    $.get("/gateway/config/tea/active", function(data, status) {
+        $("#activeTeaConfigFrom").html("/api/tea");
+        $("#activeTeaConfigTo").html(data.name);
+        $("#activeTeaConfigToUrl").html(data.serviceUrl);
+    });
+
+    $.get("/gateway/config/tea", function(data, status) {
+         $("#teaRoutes").empty();
+         $.each(data, function(i, val) {
+             let config = $("<tr>");
+             let configName = $("<td>", {
+                 text: val.name
+             });
+             let url = $("<td>", {
+                 text: val.serviceUrl
+             })
+             let action = $("<td>");
+             let activateButton = $("<button>", {
+                 type: "button",
+                 class: "btn btn-primary btn-sm",
+                 text: "Activate",
+                 style: "margin: 5px;",
+                 onClick: "activateTeaRoute(" + val.id +");"
+             });
+             action.append(activateButton);
+
+             $( config ).append(configName);
+             $( config ).append(url);
+             $( config ).append(action);
+             $( "#teaRoutes" ).append(config);
+         });
+    });
+
+    $.get("/gateway/config/coffee/active", function(data, status) {
+         $("#activeCoffeeConfigFrom").html("/api/coffee");
+         $("#activeCoffeeConfigTo").html(data.name);
+         $("#activeCoffeeConfigToUrl").html(data.serviceUrl);
+    });
+
+    $.get("/gateway/config/coffee", function(data, status) {
+        $("#coffeeRoutes").empty();
+        $.each(data, function(i, val) {
+             let config = $("<tr>");
+             let configName = $("<td>", {
+                 text: val.name
+             });
+             let url = $("<td>", {
+                 text: val.serviceUrl
+             })
+             let action = $("<td>");
+             let activateButton = $("<button>", {
+                 type: "button",
+                 class: "btn btn-primary btn-sm",
+                 text: "Activate",
+                 style: "margin: 5px;",
+                 onClick: "activateCoffeeRoute(" + val.id +");"
+             });
+             action.append(activateButton);
+
+             $( config ).append(configName);
+             $( config ).append(url);
+             $( config ).append(action);
+             $( "#coffeeRoutes" ).append(config);
+        });
+    });
+};
+
+function activateTeaRoute(routeConfigId) {
+    var url = "/gateway/config/tea/active/" + routeConfigId;
+    $.post(url).always(function(){
+        $("#activeTeaConfigTo").fadeOut();
+        $("#activeTeaConfigToUrl").fadeOut();
+        loadRouteConfigs();
+        $("#activeTeaConfigTo").fadeIn(1500);
+        $("#activeTeaConfigToUrl").fadeIn(1500);
+    });
+};
+
+function activateCoffeeRoute(routeConfigId) {
+    var url = "/gateway/config/coffee/active/" + routeConfigId;
+    $.post(url).always(function(){
+        $("#activeCoffeeConfigTo").fadeOut();
+        $("#activeCoffeeConfigToUrl").fadeOut();
+        loadRouteConfigs();
+        $("#activeCoffeeConfigTo").fadeIn(1500);
+        $("#activeCoffeeConfigToUrl").fadeIn(1500);
+    });
+};
+
+</script>
+</body>
+</html>
