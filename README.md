@@ -1,20 +1,16 @@
-----------------------------
-# Beverage Maker API Gateway
+# Microservice API Gateway
 
-An API Gateway for the Beverage Maker application in the Death Star Canteen.
+Microservice Presentation: Microservice API Gateway written in Java.
 
-----------------------------
-## Pre-requisites to build the application from source:
-- Java Jdk 1.8
+# Overview
 
-----------------------------
-## Instructions to build and run the application from source:
+This sample code demonstrates the use of microservices using the following solution as server that links clients to either a monolithic or collection of microservices.
 
-```
-   > mvnw.cmd clean install spring-boot:run
-```
+# Presentations
 
-## API Routing is configured via Web page:
-```
-    http://localhost:9090/
-```
+This sample code has been used for mulitple master class demonstrations on microservices architecture. Namely ther following: 
+
+- IQbusiness Open Master Class (2017-05-04 @ IQbusiness)  *International Star Wars Day*
+- FNB Code Fest (2017-09-20 @ Wesbank)
+- FNB Code Fest (2017-09-28 @ RMB)
+
